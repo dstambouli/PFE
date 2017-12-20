@@ -1,12 +1,14 @@
+set.seed(8)
+
 w1 = 0.5*matrix(rnorm(12),3,4)
 w2 = 0.5*matrix(rnorm(4),4,1)
-N = 5000
+
+N = 1000
 x1 = rnorm(N, 0, 0.25)
 x2 = rnorm(N, 0.5, 0.30)
 b = rep(1, N)
 epsilon = rnorm(N, 0, 1)
-plot(x1)
-points(x2, col=2)
+
 
 input = matrix(c(b, x1,x2), nrow = length(b))
 
@@ -37,7 +39,8 @@ for (i in 1:nrow(input)) {
 
 
 
-filename <- file('data1.csv', open = "w")
+filename <- file('set1.csv', open = "w")
+writeLines(paste(c("b", "x1", "x2", "Y"), collapse = ";"), filename)
 for(i in 1:nrow(input)){
   writeLines(paste(c(input[i,1:3], Y[i]), collapse = ";"), filename)
 }
