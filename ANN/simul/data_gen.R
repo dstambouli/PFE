@@ -7,7 +7,7 @@ N = 1000
 x1 = rnorm(N, 0, 0.25)
 x2 = rnorm(N, 0.5, 0.30)
 b = rep(1, N)
-epsilon = rnorm(N, 0, 1)
+epsilon = rnorm(N, 0, 0.01)
 
 
 input = matrix(c(b, x1,x2), nrow = length(b))
@@ -16,25 +16,12 @@ sig = function(x){
     return ((1+exp(-x))^(-1))
 }
 Y = matrix(nrow = length(b), ncol = 1, 0)
-#for (i in 1:nrow(input)) {
-#    temp1 = sig(input[i,1:3]%*%w1)
-#    temp2 = sig(temp1%*%w2)
-#    Y[i] = temp2
-#}
 
-n1 = 0
-n2 = 0
+
 for (i in 1:nrow(input)) {
   temp1 = sig(input[i,1:3]%*%w1)
-  temp2 = sig(temp1%*%w2) + epsilon[i]
-  if(temp2 > 0.45){
-    Y[i] = 1 
-    n1 = n1 +1
-  }
-  if(temp2 <= 0.45){
-    Y[i] = 0
-    n2 = n2 + 1
-  }
+  Y[i] = sig(temp1%*%w2) + epsilon[i]
+
 }
 
 

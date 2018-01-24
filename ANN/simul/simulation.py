@@ -32,43 +32,33 @@ Y_test = Y_test.values.T
 ################################################################################
 #                                     ANN
 ################################################################################
+class Ann(object):
+    def __init__(self):
+        self.inputSize = 3
+        self.outputSize = 1
+        self.hiddenSize = 4
+        # weights from a standard normal distribution (mean = 0, std =1)
+        self.w1 = np.random.randn(self.inputSize, self.hiddenSize)
+        self.w2 = np.random.rand(self.hiddenSize, self.outputSize)
 
-def sigmoid(x, deriv):
-    if(deriv == True):
-        return x*(1-x)
-    return 1/(1+np.exp(-x))
+    def sigmoid(self, x, deriv):
+        if(deriv):
+            return self.sigmoid(x)*(self.sigmoid(x)-1)
+        else:
+            return 1/(1+np.exp(-x))
 
-w1 = 2*np.random.random((3,4))-1
-w2 = 2*np.random.random((4,1))-1
-print("weights inti \n")
-print(w1)
-print(w2)
-log_tr = list()
+    def forwardStep(self, X):
+        self.signal1 = np.dot(X, self.w1)
+        self.layer1 = self.sigmoid(self.signal1, False)
+        self.signal2 = np.dot(self.layer1, self.w2)
+        resOut = self.sigmoid(self.signal2, False)
+        return resOut
+    def CostDeriv(self, X, Y):
+        yOut = self.forwardStep(X)
+        deltaOut = np.multiply(-(Y-yOut), self.sigmoid(self.signal2,True))
+        dCostdw2 = np.dot(self.layer1.T, deltaOut)
 
-for i in range(100000):
-    l0 = X_train
-    l1 = sigmoid(np.dot(X_train, w1), False)
-    #print("l1 shape \n",l1.shape)
-    l2 = sigmoid(np.dot(l1,w2), False)
-    #print("l2 shape \n",l2.shape)
-    l2error = (Y_train - l2) + 0.2*np.linalg.norm(w2, ord = 2)
-    #print("l2error\n", l2error.shape)
-    l2_delta = np.multiply(l2error, sigmoid(l2, True))
-    #print("l2delta\n",l2_delta.shape)
-    log_tr.append(np.mean(np.abs(l2error)))
-    l2_delta = l2error * sigmoid(l2, True)
-    l1error = np.dot(l2_delta,w2.T) + 0.2*np.linalg.norm(w1, ord = 2)
-    l1_delta = l1error* sigmoid(l1, True)
-    w2 += np.dot(l1.T, l2_delta)
-    w1 += np.dot(l0.T,l1_delta)
 
-print("weights end \n")
-print(w1)
-print(w2)
-print(np.trunc(l2[:10]))
-
-ind = np.array([i for i in range(100000)])
-log_tr = np.array(log_tr)
-plt.plot(ind, log_tr)
-
-plt.show()
+nn = Ann()
+ysortie = nn.forwardStep(X_train)
+print(ysortie - Y_train)
