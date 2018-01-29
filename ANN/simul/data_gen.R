@@ -1,25 +1,24 @@
 set.seed(8)
 
-w1 = 0.5*matrix(rnorm(12),3,4)
-w2 = 0.5*matrix(rnorm(4),4,1)
+w1 = matrix(rnorm(6),2,3)
+w2 = 0.5*matrix(rnorm(3),3,1)
 
 N = 1000
-x1 = rnorm(N, 0, 0.25)
+x1 = rnorm(N, 0, 0.5)
 x2 = rnorm(N, 0.5, 0.30)
-b = rep(1, N)
 epsilon = rnorm(N, 0, 0.01)
 
 
-input = matrix(c(b, x1,x2), nrow = length(b))
+input = matrix(c(x1,x2), nrow = N)
 
 sig = function(x){
     return ((1+exp(-x))^(-1))
 }
-Y = matrix(nrow = length(b), ncol = 1, 0)
+Y = matrix(nrow = N, ncol = 1, 0)
 
 
 for (i in 1:nrow(input)) {
-  temp1 = sig(input[i,1:3]%*%w1)
+  temp1 = sig(input[i,1:2]%*%w1)
   Y[i] = sig(temp1%*%w2) + epsilon[i]
 
 }
@@ -27,9 +26,9 @@ for (i in 1:nrow(input)) {
 
 
 filename <- file('set1.csv', open = "w")
-writeLines(paste(c("b", "x1", "x2", "Y"), collapse = ";"), filename)
+writeLines(paste(c( "x1", "x2", "Y"), collapse = ";"), filename)
 for(i in 1:nrow(input)){
-  writeLines(paste(c(input[i,1:3], Y[i]), collapse = ";"), filename)
+  writeLines(paste(c(input[i,1:2], Y[i]), collapse = ";"), filename)
 }
 
 close(filename)
