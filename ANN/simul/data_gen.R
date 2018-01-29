@@ -1,11 +1,12 @@
 set.seed(8)
 
-w1 = matrix(rnorm(6),2,3)
-w2 = 0.5*matrix(rnorm(3),3,1)
-
+w1 = matrix(rnorm(6, mean=0, sd=2),2,3)
+b1 = matrix(rnorm(3, mean = 0, sd=1), 3,1)
+w2 = matrix(rnorm(3, mean=0, sd=1),3,1)
+b2 = rnorm(1, mean=0, sd=1)
 N = 1000
-x1 = rnorm(N, 0, 0.5)
-x2 = rnorm(N, 0.5, 0.30)
+x1 = rnorm(N, 9, 9)
+x2 = rnorm(N, 8, 1)
 epsilon = rnorm(N, 0, 0.01)
 
 
@@ -18,8 +19,10 @@ Y = matrix(nrow = N, ncol = 1, 0)
 
 
 for (i in 1:nrow(input)) {
-  temp1 = sig(input[i,1:2]%*%w1)
-  Y[i] = sig(temp1%*%w2) + epsilon[i]
+  temp1 = input[i,1:2]%*%w1 
+  temp1 = sig(temp1)
+  temp2 = temp1%*%w2 + b2
+  Y[i] = sig(temp2) + epsilon[i]
 
 }
 
