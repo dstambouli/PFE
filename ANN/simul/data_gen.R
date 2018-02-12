@@ -1,10 +1,9 @@
 set.seed(8)
 
 w1 = matrix(rnorm(6, mean=0, sd=2),2,3)
-b1 = matrix(rnorm(3, mean = 0, sd=1), 3,1)
 w2 = matrix(rnorm(3, mean=0, sd=1),3,1)
 b2 = rnorm(1, mean=0, sd=1)
-N = 1000
+N = 5000
 x1 = rnorm(N, 9, 9)
 x2 = rnorm(N, 8, 1)
 epsilon = rnorm(N, 0, 0.01)

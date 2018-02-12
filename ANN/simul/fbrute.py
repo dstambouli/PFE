@@ -16,6 +16,8 @@ np.random.seed(1)
 df = pd.read_csv('set1.csv', sep=';')
 
 # split data 0.8 training, 0.2 test
+
+
 train, test = train_test_split(df, test_size=0.2)
 ################################################################################
 #                                Preprocessing
@@ -45,21 +47,37 @@ Y_test = Y_test.values
 #                   network
 ###############################################################################
 # create model
+#, kernel_regularizer=regularizers.l2(0.05)
+
+
 model = Sequential()
-model.add(Dense(3, input_dim=2, kernel_regularizer=regularizers.l2(0.05), activation='sigmoid'))
-#model.add(Dense(3, activation='sigmoid'))
-model.add(Dense(1, activation='sigmoid'))
+model.add(Dense(3, input_dim=2, activation='relu'))
+#model.add(Dense(3, activation='relu'))
+model.add(Dense(1, activation='linear'))
 
 # Compile model
-sgd = optimizers.SGD(lr=0.7, clipnorm=1.)
+sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
 model.compile(loss='mean_squared_error', optimizer=sgd, metrics=['mean_squared_error'])
 # Fit the model
-k = model.fit(x=X_train, y=Y_train, batch_size= 40, epochs=1000, verbose=0)
+k = model.fit(x=X_train, y=Y_train, validation_split=0.2, batch_size= 30, epochs=1800, verbose=0)
 # evaluate the model
 score = model.evaluate(X_test, Y_test)
-print('Test score:', score[1])
+print("mse : {} ".format(score[1]))
 
-print("weights")
+
+"""print("weights")
 for w in model.get_weights():
     print(w)
-    print('\n')
+    print('\n')"""
+
+
+print(k.history.keys())
+axes = plt.gca()
+#axes.set_ylim([0,0.01])
+plt.plot(k.history['mean_squared_error'])
+plt.plot(k.history['val_mean_squared_error'])
+plt.title('model mse')
+plt.ylabel('mse')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper left')
+plt.show()
