@@ -1,5 +1,5 @@
 # PFE
-Code for final-year project : 
+Code for: 
   - comparaison of various ML algorithms on a data set (logistic regression, SVM, random forest, neural network)
   - data preprocessing (One Hot Encoding), drop missing...
   - some exploratory data analysis with CART and features importance, Chi2 independecy test..
